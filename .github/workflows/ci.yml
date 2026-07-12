@@ -49,12 +49,25 @@ jobs:
         if: steps.check_gemfile.outputs.exists == 'true'
         run: bundle exec rubocop || true
 
+      - name: Verificar si ya hay specs
+        id: check_specs
+        run: |
+          if [ -n "$(find spec -name '*_spec.rb' 2>/dev/null)" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: RSpec (tests)
-        if: steps.check_gemfile.outputs.exists == 'true'
+        if: steps.check_gemfile.outputs.exists == 'true' && steps.check_specs.outputs.exists == 'true'
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/todo_api_test
         run: bundle exec rspec
 
+      - name: Sin specs aun
+        if: steps.check_gemfile.outputs.exists == 'true' && steps.check_specs.outputs.exists == 'false'
+        run: echo "Gemfile existe pero aun no hay archivos *_spec.rb. Los tests llegan en el issue 09."
+
       - name: Sin Gemfile aun
         if: steps.check_gemfile.outputs.exists == 'false'
-        run: echo "No hay Gemfile todavia, el pipeline pasa en verde. Se completara en el issue 03."
+        run: echo "No hay Gemfile todavia, el pipeline pasa en verde."
