@@ -1,0 +1,9 @@
+[
+  { "name": "ruby-basico",      "color": "0E8A16", "description": "Sintaxis y conceptos base de Ruby" },
+  { "name": "ruby-poo",         "color": "1D76DB", "description": "Programacion orientada a objetos" },
+  { "name": "ruby-idiomatico",  "color": "5319E7", "description": "Refactor a metodos idiomaticos de Ruby" },
+  { "name": "testing",          "color": "FBCA04", "description": "Tests y RSpec" },
+  { "name": "devops",           "color": "D93F0B", "description": "Docker, CI/CD, entorno" },
+  { "name": "backend",          "color": "0052CC", "description": "Logica de servidor" },
+  { "name": "rails",            "color": "CC0000", "description": "Migracion e implementacion en Rails 7" }
+]

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: todo_api_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout codigo
+        uses: actions/checkout@v4
+
+      - name: Verificar si existe Gemfile
+        id: check_gemfile
+        run: |
+          if [ -f "Gemfile" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configurar Ruby
+        if: steps.check_gemfile.outputs.exists == 'true'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: RuboCop (lint)
+        if: steps.check_gemfile.outputs.exists == 'true'
+        run: bundle exec rubocop || true
+
+      - name: RSpec (tests)
+        if: steps.check_gemfile.outputs.exists == 'true'
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/todo_api_test
+        run: bundle exec rspec
+
+      - name: Sin Gemfile aun
+        if: steps.check_gemfile.outputs.exists == 'false'
+        run: echo "No hay Gemfile todavia, el pipeline pasa en verde. Se completara en el issue 03."

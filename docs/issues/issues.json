@@ -1,0 +1,82 @@
+[
+  {
+    "title": "01 - Estructura base del repo",
+    "labels": ["devops"],
+    "body": "## Objetivo\nDejar la estructura minima del proyecto lista.\n\n## Tareas\n- [ ] Crear README.md con descripcion del proyecto y como levantarlo\n- [ ] Crear .gitignore (Ruby: *.log, .env, /tmp)\n- [ ] Crear estructura de carpetas: lib/, spec/, config/\n\n## Criterios de aceptacion\n- El repo tiene README con instrucciones claras\n- git status no muestra archivos que no deberian versionarse"
+  },
+  {
+    "title": "02 - Docker Compose con PostgreSQL",
+    "labels": ["devops"],
+    "body": "## Objetivo\nLevantar PostgreSQL 16 via Docker, sin instalacion local.\n\n## Tareas\n- [ ] Crear docker-compose.yml con servicio postgres:16\n- [ ] Variables de entorno para user/password/db en .env (no versionado)\n- [ ] Script SQL inicial (db/init.sql) que crea la tabla tasks\n- [ ] Documentar en README como levantar la base de datos\n\n## Criterios de aceptacion\n- docker compose up levanta Postgres sin errores\n- Se puede conectar con psql desde el host al contenedor\n- La tabla tasks existe tras el primer arranque\n\n## Temas que practica\nFundamento DevOps: entorno declarado como codigo (reproducibilidad)."
+  },
+  {
+    "title": "03 - CI basico con GitHub Actions",
+    "labels": ["devops", "testing"],
+    "body": "## Objetivo\nPipeline que corre automaticamente en cada push/PR.\n\n## Tareas\n- [ ] Crear .github/workflows/ci.yml\n- [ ] Job que instala Ruby y corre bundle install (si existe Gemfile)\n- [ ] Job que corre RSpec (aunque este vacio, debe pasar en verde)\n\n## Criterios de aceptacion\n- Al hacer push, el workflow se dispara y termina en verde\n- Se ve el check en GitHub"
+  },
+  {
+    "title": "04 - Servidor Rack y GET /health",
+    "labels": ["ruby-basico", "backend"],
+    "body": "## Objetivo\nServidor HTTP minimo usando Rack, sin Rails, que responda un health check.\n\n## Tareas\n- [ ] Crear clase App con call(env) que devuelva JSON en GET /health\n- [ ] Configurar config.ru para levantar el servidor\n- [ ] Probar con curl que responde 200 y JSON valido\n\n## Criterios de aceptacion\n- curl localhost:9292/health devuelve {\\\"status\\\":\\\"ok\\\"}\n\n## Temas Ruby que practica\nVariables, strings e interpolacion, simbolos vs strings, hashes, metodos, require y organizacion de archivos, convenciones de nombres."
+  },
+  {
+    "title": "05 - Router hecho a mano",
+    "labels": ["ruby-basico", "ruby-poo", "backend"],
+    "body": "## Objetivo\nConstruir un router propio que mapee metodo HTTP + path a una accion, sin usar el router de ningun framework.\n\n## Tareas\n- [ ] Clase Router con metodo add(metodo, path, bloque)\n- [ ] Soporte para parametros dinamicos en la ruta (ej: /tasks/:id)\n- [ ] Metodo match(env) que devuelva la accion correspondiente o 404\n\n## Criterios de aceptacion\n- El router resuelve rutas estaticas y con parametros\n- Devuelve 404 en JSON si no hay match\n\n## Temas Ruby que practica\nClases, initialize, attr_reader/accessor, arrays y hashes anidados, each, case/when, expresiones regulares, rangos, manejo de nil."
+  },
+  {
+    "title": "06 - Clase Database (conexion Postgres)",
+    "labels": ["ruby-poo", "backend"],
+    "body": "## Objetivo\nClase que administre la conexion a PostgreSQL usando la gema pg.\n\n## Tareas\n- [ ] Clase Database con patron Singleton (una sola conexion activa)\n- [ ] Metodo with_connection que use yield para ceder el bloque\n- [ ] Manejo de errores de conexion con clases de excepcion propias\n\n## Criterios de aceptacion\n- La conexion se reutiliza, no se crea una nueva por cada query\n- Un error de conexion lanza una excepcion clara, no un crash generico\n\n## Temas Ruby que practica\nModulos y namespaces, constantes, variables de instancia vs de clase, patron Singleton, begin/rescue/ensure, excepciones propias, bloques con yield."
+  },
+  {
+    "title": "07 - GET y POST /tasks",
+    "labels": ["ruby-idiomatico", "backend"],
+    "body": "## Objetivo\nImplementar listar y crear tareas contra Postgres.\n\n## Tareas\n- [ ] GET /tasks: traer filas y transformarlas a JSON\n      - Version 1: con while/each y un acumulador manual\n      - Version 2 (refactor): con map\n- [ ] POST /tasks: validar body y hacer INSERT\n      - Validaciones a mano primero, luego con all?/any?\n- [ ] Manejo de errores de validacion (400 con mensaje claro)\n\n## Criterios de aceptacion\n- GET /tasks devuelve un array JSON de tareas\n- POST /tasks con datos invalidos devuelve 400, con datos validos devuelve 201\n\n## Temas Ruby que practica\nmap, select, reject, all?/any?, keyword arguments, valores por defecto, operador &., freeze y strings congelados."
+  },
+  {
+    "title": "08 - PATCH y DELETE /tasks/:id",
+    "labels": ["ruby-idiomatico", "backend"],
+    "body": "## Objetivo\nImplementar actualizar y eliminar tareas.\n\n## Tareas\n- [ ] PATCH /tasks/:id: buscar, mergear cambios, actualizar\n- [ ] DELETE /tasks/:id: eliminar y devolver 204\n- [ ] Devolver 404 si el id no existe\n\n## Criterios de aceptacion\n- PATCH actualiza solo los campos enviados\n- DELETE de un id inexistente devuelve 404, no un 500\n\n## Temas Ruby que practica\nfind/detect, dig, merge de hashes, duck typing, respond_to?, metodos privados, guard clauses."
+  },
+  {
+    "title": "09 - Tests con RSpec",
+    "labels": ["testing"],
+    "body": "## Objetivo\nCubrir todos los endpoints con tests automatizados.\n\n## Tareas\n- [ ] Configurar RSpec + rack-test\n- [ ] Tests de GET/POST/PATCH/DELETE con casos exitosos y de error\n- [ ] Tests de la clase Database y el Router de forma aislada\n\n## Criterios de aceptacion\n- rspec corre en verde localmente y en CI\n- Cobertura de los 4 endpoints principales\n\n## Temas Ruby que practica\nBloques a fondo (describe/it/let), lambdas vs procs, expect { }.to raise_error, diferencia entre ==, eql?, equal?, stubs y mocks."
+  },
+  {
+    "title": "10 - Endpoint de estadisticas",
+    "labels": ["ruby-idiomatico", "backend"],
+    "body": "## Objetivo\nEndpoint de estadisticas agregadas sobre las tareas.\n\n## Tareas\n- [ ] GET /tasks/stats: total, completadas, pendientes\n- [ ] Agrupar por dia de creacion\n- [ ] Ordenar tareas por fecha usando Comparable\n\n## Criterios de aceptacion\n- El endpoint devuelve conteos correctos verificables con datos de prueba\n\n## Temas Ruby que practica\nreduce/inject, group_by, count, sort_by, min_by/max_by, each_with_object, modulo Comparable."
+  },
+  {
+    "title": "11 - Mixins y metaprogramacion",
+    "labels": ["ruby-poo", "ruby-idiomatico"],
+    "body": "## Objetivo\nExplorar mixins y metaprogramacion ligera sobre el modelo de tareas.\n\n## Tareas\n- [ ] Modulo Serializable incluido en Task (mixin con include)\n- [ ] Clase TaskCollection que implemente Enumerable con each propio\n- [ ] Ejemplo controlado de define_method o method_missing (solo exploratorio)\n\n## Criterios de aceptacion\n- TaskCollection responde a map, select, etc. gracias a Enumerable\n- El mixin Serializable evita repetir logica de to_json en cada clase\n\n## Temas Ruby que practica\ninclude, module, Enumerable, define_method, method_missing (uso responsable)."
+  },
+  {
+    "title": "12 - Iniciar app Rails 7",
+    "labels": ["rails", "devops"],
+    "body": "## Objetivo\nIniciar la app Rails 7 en modo API conectada al mismo Postgres de Docker.\n\n## Tareas\n- [ ] rails new . --api --database=postgresql\n- [ ] Configurar database.yml contra el contenedor existente\n- [ ] Verificar que rails server levanta sin errores\n\n## Criterios de aceptacion\n- rails db:create corre exitosamente contra el Postgres de Docker"
+  },
+  {
+    "title": "13 - Modelo Task con ActiveRecord",
+    "labels": ["rails", "backend"],
+    "body": "## Objetivo\nModelo Task con ActiveRecord, comparando contra el SQL manual anterior.\n\n## Tareas\n- [ ] Generar migracion para tasks (mismos campos que en Ruby puro)\n- [ ] Validaciones con ActiveRecord (presence, etc.)\n- [ ] Comparar en un comentario del PR: SQL manual vs ActiveRecord\n\n## Criterios de aceptacion\n- rails db:migrate corre sin errores\n- Task.create con datos invalidos falla la validacion, no la base de datos"
+  },
+  {
+    "title": "14 - Controller REST",
+    "labels": ["rails", "backend"],
+    "body": "## Objetivo\nController REST estandar reemplazando el router hecho a mano.\n\n## Tareas\n- [ ] TasksController con index/show/create/update/destroy\n- [ ] Rutas RESTful en config/routes.rb\n- [ ] Mantener el mismo contrato JSON que la version Ruby puro\n\n## Criterios de aceptacion\n- Los mismos requests que probaste con curl en Ruby puro funcionan igual aqui"
+  },
+  {
+    "title": "15 - Tests con RSpec y FactoryBot",
+    "labels": ["rails", "testing"],
+    "body": "## Objetivo\nMigrar los tests a RSpec de Rails con FactoryBot.\n\n## Tareas\n- [ ] Configurar rspec-rails y factory_bot_rails\n- [ ] Request specs para los 4 endpoints\n- [ ] Factory de Task con Faker para datos de prueba\n\n## Criterios de aceptacion\n- rspec corre en verde con la misma cobertura que la version Ruby puro"
+  },
+  {
+    "title": "16 - RuboCop y Brakeman en CI",
+    "labels": ["rails", "devops"],
+    "body": "## Objetivo\nAgregar linting y analisis de seguridad al pipeline.\n\n## Tareas\n- [ ] Configurar RuboCop con reglas de Rails\n- [ ] Agregar Brakeman al CI\n- [ ] Actualizar .github/workflows/ci.yml con ambos jobs\n\n## Criterios de aceptacion\n- CI falla si RuboCop o Brakeman detectan problemas"
+  }
+]
